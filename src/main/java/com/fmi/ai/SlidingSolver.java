@@ -30,7 +30,7 @@ public class SlidingSolver {
         int bound = tileBoard.getHeuristic();
         final Stack<TileBoard> stack = new Stack<>();
         stack.push(tileBoard);
-
+        // somewhat okay up to here
         int t = Integer.MAX_VALUE;
         while (t != -1) {
             t = subroutine(stack, bound);

@@ -8,7 +8,7 @@ public class Util {
     }
 
     public static int calcDistance(final Pair<Integer, Integer> a, final Pair<Integer, Integer> b) {
-        return Math.abs(a.getX() - b.getX()) + Math.abs(a.getY() - b.getY());
+        return Math.abs(a.getKey() - b.getKey()) + Math.abs(a.getValue() - b.getValue());
     }
 
     public static int[][] copy2DArray(final int[][] a) {

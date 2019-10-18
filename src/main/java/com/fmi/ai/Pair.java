@@ -2,21 +2,44 @@ package com.fmi.ai;
 
 import java.util.Objects;
 
+/**
+ * Immutable generic pair, primarily used for the coordinates of the 0 in the board.
+ *
+ * @param <K> the type of the key
+ * @param <V> the type of the value
+ * @author angel.beshirov
+ */
 public class Pair<K, V> {
-    private final K x;
-    private final V y;
+    private final K key;
+    private final V value;
 
-    public Pair(final K x, final V y) {
-        this.x = x;
-        this.y = y;
+    /**
+     * Parametrized constructor which sets key and value of this pair.
+     *
+     * @param key   the key
+     * @param value the value
+     */
+    public Pair(final K key, final V value) {
+        this.key = key;
+        this.value = value;
     }
 
-    public K getX() {
-        return x;
+    /**
+     * Returns the key.
+     *
+     * @return the key
+     */
+    public K getKey() {
+        return key;
     }
 
-    public V getY() {
-        return y;
+    /**
+     * Returns the value.
+     *
+     * @return the value
+     */
+    public V getValue() {
+        return value;
     }
 
     @Override
@@ -24,20 +47,20 @@ public class Pair<K, V> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final Pair<?, ?> pair = (Pair<?, ?>) o;
-        return Objects.equals(x, pair.x) &&
-                Objects.equals(y, pair.y);
+        return Objects.equals(key, pair.key) &&
+                Objects.equals(value, pair.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y);
+        return Objects.hash(key, value);
     }
 
     @Override
     public String toString() {
         return "Pair{" +
-                "x=" + x +
-                ", y=" + y +
+                "key=" + key +
+                ", value=" + value +
                 '}';
     }
 }

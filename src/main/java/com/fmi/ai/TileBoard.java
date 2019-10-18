@@ -22,46 +22,46 @@ public class TileBoard {
 
     public List<TileBoard> getNextBoards() {
         final List<TileBoard> neighbours = new ArrayList<>();
-        if (0 <= zeroCoordinates.getX() - 1) {
+        if (0 <= zeroCoordinates.getKey() - 1) {
             final int[][] moveLeftBoard = Util.copy2DArray(board);
 
-            moveLeftBoard[zeroCoordinates.getX()][zeroCoordinates.getY()] = moveLeftBoard[zeroCoordinates.getX() - 1][zeroCoordinates.getY()];
-            moveLeftBoard[zeroCoordinates.getX() - 1][zeroCoordinates.getY()] = 0;
+            moveLeftBoard[zeroCoordinates.getKey()][zeroCoordinates.getValue()] = moveLeftBoard[zeroCoordinates.getKey() - 1][zeroCoordinates.getValue()];
+            moveLeftBoard[zeroCoordinates.getKey() - 1][zeroCoordinates.getValue()] = 0;
 
-            final TileBoard moveDown = new TileBoard(moveLeftBoard, new Pair<>(zeroCoordinates.getX() - 1, zeroCoordinates.getY()));
+            final TileBoard moveDown = new TileBoard(moveLeftBoard, new Pair<>(zeroCoordinates.getKey() - 1, zeroCoordinates.getValue()));
             moveDown.appendMoves(moves + "D");
             neighbours.add(moveDown);
         }
 
-        if (board.length > zeroCoordinates.getX() + 1) {
+        if (board.length > zeroCoordinates.getKey() + 1) {
             final int[][] moveRightBoard = Util.copy2DArray(board);
 
-            moveRightBoard[zeroCoordinates.getX()][zeroCoordinates.getY()] = moveRightBoard[zeroCoordinates.getX() + 1][zeroCoordinates.getY()];
-            moveRightBoard[zeroCoordinates.getX() + 1][zeroCoordinates.getY()] = 0;
+            moveRightBoard[zeroCoordinates.getKey()][zeroCoordinates.getValue()] = moveRightBoard[zeroCoordinates.getKey() + 1][zeroCoordinates.getValue()];
+            moveRightBoard[zeroCoordinates.getKey() + 1][zeroCoordinates.getValue()] = 0;
 
-            final TileBoard moveUp = new TileBoard(moveRightBoard, new Pair<>(zeroCoordinates.getX() + 1, zeroCoordinates.getY()));
+            final TileBoard moveUp = new TileBoard(moveRightBoard, new Pair<>(zeroCoordinates.getKey() + 1, zeroCoordinates.getValue()));
             moveUp.appendMoves(moves + "U");
             neighbours.add(moveUp);
         }
 
-        if (0 <= zeroCoordinates.getY() - 1) {
+        if (0 <= zeroCoordinates.getValue() - 1) {
             final int[][] moveUpBoard = Util.copy2DArray(board);
 
-            moveUpBoard[zeroCoordinates.getX()][zeroCoordinates.getY()] = moveUpBoard[zeroCoordinates.getX()][zeroCoordinates.getY() - 1];
-            moveUpBoard[zeroCoordinates.getX()][zeroCoordinates.getY() - 1] = 0;
+            moveUpBoard[zeroCoordinates.getKey()][zeroCoordinates.getValue()] = moveUpBoard[zeroCoordinates.getKey()][zeroCoordinates.getValue() - 1];
+            moveUpBoard[zeroCoordinates.getKey()][zeroCoordinates.getValue() - 1] = 0;
 
-            final TileBoard moveLeft = new TileBoard(moveUpBoard, new Pair<>(zeroCoordinates.getX(), zeroCoordinates.getY() - 1));
+            final TileBoard moveLeft = new TileBoard(moveUpBoard, new Pair<>(zeroCoordinates.getKey(), zeroCoordinates.getValue() - 1));
             moveLeft.appendMoves(moves + "R");
             neighbours.add(moveLeft);
         }
 
-        if (board.length > zeroCoordinates.getY() + 1) {
+        if (board.length > zeroCoordinates.getValue() + 1) {
             final int[][] moveDownBoard = Util.copy2DArray(board);
 
-            moveDownBoard[zeroCoordinates.getX()][zeroCoordinates.getY()] = moveDownBoard[zeroCoordinates.getX()][zeroCoordinates.getY() + 1];
-            moveDownBoard[zeroCoordinates.getX()][zeroCoordinates.getY() + 1] = 0;
+            moveDownBoard[zeroCoordinates.getKey()][zeroCoordinates.getValue()] = moveDownBoard[zeroCoordinates.getKey()][zeroCoordinates.getValue() + 1];
+            moveDownBoard[zeroCoordinates.getKey()][zeroCoordinates.getValue() + 1] = 0;
 
-            final TileBoard moveRight = new TileBoard(moveDownBoard, new Pair<>(zeroCoordinates.getX(), zeroCoordinates.getY() + 1));
+            final TileBoard moveRight = new TileBoard(moveDownBoard, new Pair<>(zeroCoordinates.getKey(), zeroCoordinates.getValue() + 1));
             moveRight.appendMoves(moves + "L");
             neighbours.add(moveRight);
         }
@@ -76,6 +76,7 @@ public class TileBoard {
      * Evaluates the given board using the Manhattan distance heuristic.
      */
     public int calculateManhattanDistance() {
+        // TODO the black doesn't participate in the heuristic distance
         final int n = board.length;
         int manhattanDistance = 0;
 
