@@ -3,34 +3,31 @@ package com.fmi.ai;
 public class SlidingSolution {
     private String myMoves;
 
-    public SlidingSolution(String moves) {
+    public SlidingSolution(final String moves) {
         myMoves = moves;
     }
 
-    public String getMoves()
-    {
+    public String getMoves() {
         return myMoves;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Move the empty space in the following directions:\n\n");
-        for(char move : myMoves.toCharArray())
-        {
-            switch(move)
-            {
-                case 'U' :
-                    sb.append("UP\n");
+        final StringBuilder sb = new StringBuilder();
+        sb.append("Solution: ");
+        for (final char move : myMoves.toCharArray()) {
+            switch (move) {
+                case 'U':
+                    sb.append("UP ");
                     break;
-                case 'R' :
-                    sb.append("RIGHT\n");
+                case 'R':
+                    sb.append("RIGHT ");
                     break;
-                case 'D' :
-                    sb.append("DOWN\n");
+                case 'D':
+                    sb.append("DOWN ");
                     break;
-                case 'L' :
-                    sb.append("LEFT\n");
+                case 'L':
+                    sb.append("LEFT ");
                     break;
             }
         }

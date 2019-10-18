@@ -6,77 +6,63 @@ import java.util.List;
 import java.util.Objects;
 
 public class TileBoard {
-    //String representation of a puzzle board
     private int[][] board;
-    //String representation of the list of moves that generated this board
-    private String myMoves = "";
+    private String moves = "";
 
     private Pair<Integer, Integer> zeroCoordinates;
+    private int manhattan;
     private int heuristic;
 
-    /* You may add more instance and class variables and methods as you see fit - you will need to */
-
-    public TileBoard(final int[][] board, Pair<Integer, Integer> zeroCoordinates) {
+    public TileBoard(final int[][] board, final Pair<Integer, Integer> zeroCoordinates) {
         this.board = board;
-//        for(int i = 0; i < n; i++) {
-//            for(int j = 0; j < board[i].length; j++) {
-//                if(this.board[i][j] == 0) {
-//                    zeroCoordinates = new Pair<>(i, j);
-//                    break;
-//                }
-//            }
-//        }
         this.zeroCoordinates = zeroCoordinates;
-        this.heuristic = calculateManhattanDistance() + myMoves.length();
+        this.manhattan = calculateManhattanDistance();
+        this.heuristic = this.manhattan + moves.length();
     }
 
-    /*
-     * Returns a list of boards that are one move away.  This list *DOES NOT* contain the
-     * previous board, as this would undo a moving we just made (see the lab documentation).
-     */
     public List<TileBoard> getNextBoards() {
         final List<TileBoard> neighbours = new ArrayList<>();
         if (0 <= zeroCoordinates.getX() - 1) {
-            int[][] moveLeftBoard = Util.copy2DArray(board);
+            final int[][] moveLeftBoard = Util.copy2DArray(board);
 
             moveLeftBoard[zeroCoordinates.getX()][zeroCoordinates.getY()] = moveLeftBoard[zeroCoordinates.getX() - 1][zeroCoordinates.getY()];
             moveLeftBoard[zeroCoordinates.getX() - 1][zeroCoordinates.getY()] = 0;
 
             final TileBoard moveDown = new TileBoard(moveLeftBoard, new Pair<>(zeroCoordinates.getX() - 1, zeroCoordinates.getY()));
-            moveDown.myMoves += "up ";
+            moveDown.appendMoves(moves + "D");
             neighbours.add(moveDown);
         }
 
         if (board.length > zeroCoordinates.getX() + 1) {
-            int[][] moveRightBoard = Util.copy2DArray(board);
+            final int[][] moveRightBoard = Util.copy2DArray(board);
 
             moveRightBoard[zeroCoordinates.getX()][zeroCoordinates.getY()] = moveRightBoard[zeroCoordinates.getX() + 1][zeroCoordinates.getY()];
             moveRightBoard[zeroCoordinates.getX() + 1][zeroCoordinates.getY()] = 0;
 
             final TileBoard moveUp = new TileBoard(moveRightBoard, new Pair<>(zeroCoordinates.getX() + 1, zeroCoordinates.getY()));
-            moveUp.myMoves += "down ";
+            moveUp.appendMoves(moves + "U");
             neighbours.add(moveUp);
         }
 
         if (0 <= zeroCoordinates.getY() - 1) {
-            int[][] moveUpBoard = Util.copy2DArray(board);
+            final int[][] moveUpBoard = Util.copy2DArray(board);
 
             moveUpBoard[zeroCoordinates.getX()][zeroCoordinates.getY()] = moveUpBoard[zeroCoordinates.getX()][zeroCoordinates.getY() - 1];
             moveUpBoard[zeroCoordinates.getX()][zeroCoordinates.getY() - 1] = 0;
 
             final TileBoard moveLeft = new TileBoard(moveUpBoard, new Pair<>(zeroCoordinates.getX(), zeroCoordinates.getY() - 1));
-            moveLeft.myMoves += "left ";
+            moveLeft.appendMoves(moves + "R");
             neighbours.add(moveLeft);
         }
 
         if (board.length > zeroCoordinates.getY() + 1) {
-            int[][] moveDownBoard = Util.copy2DArray(board);
+            final int[][] moveDownBoard = Util.copy2DArray(board);
 
             moveDownBoard[zeroCoordinates.getX()][zeroCoordinates.getY()] = moveDownBoard[zeroCoordinates.getX()][zeroCoordinates.getY() + 1];
             moveDownBoard[zeroCoordinates.getX()][zeroCoordinates.getY() + 1] = 0;
 
             final TileBoard moveRight = new TileBoard(moveDownBoard, new Pair<>(zeroCoordinates.getX(), zeroCoordinates.getY() + 1));
-            moveRight.myMoves += "right ";
+            moveRight.appendMoves(moves + "L");
             neighbours.add(moveRight);
         }
         return neighbours;
@@ -90,7 +76,7 @@ public class TileBoard {
      * Evaluates the given board using the Manhattan distance heuristic.
      */
     public int calculateManhattanDistance() {
-        int n = board.length;
+        final int n = board.length;
         int manhattanDistance = 0;
 
         for (int i = 0; i < n; i++) {
@@ -106,17 +92,26 @@ public class TileBoard {
         if (0 == x) {
             return new Pair<>(n - 1, n - 1);
         }
-        int row = (0 != x % n) ? (x / n) : (x / n - 1);
-        int col = (0 != x % n) ? (x % n - 1) : (n - 1);
+        final int row = (0 != x % n) ? (x / n) : (x / n - 1);
+        final int col = (0 != x % n) ? (x % n - 1) : (n - 1);
 
         return new Pair<>(row, col);
     }
 
+    private void appendMoves(final String moves) {
+        this.moves += moves;
+        this.heuristic = this.manhattan + this.moves.length();
+    }
+
+    public String getMoves() {
+        return moves;
+    }
+
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TileBoard tileBoard = (TileBoard) o;
+        final TileBoard tileBoard = (TileBoard) o;
         return Arrays.deepEquals(board, tileBoard.board) &&
                 Objects.equals(zeroCoordinates, tileBoard.zeroCoordinates);
     }
@@ -130,12 +125,12 @@ public class TileBoard {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         sb.append("TileBoard{").append("board=[");
         for (int i = 0; i < board.length; i++) {
             sb.append(Arrays.toString(board[i]));
         }
-        sb.append(", myMoves='\"").append(myMoves).append("\'").append(", zeroCoordinates=").append(zeroCoordinates.toString())
+        sb.append(", myMoves='\"").append(moves).append("\'").append(", zeroCoordinates=").append(zeroCoordinates.toString())
                 .append(", heuristic=").append(heuristic).append("}").append("\n");
 
         return sb.toString();

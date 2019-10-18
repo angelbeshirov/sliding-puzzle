@@ -3,18 +3,17 @@ package com.fmi.ai;
 import java.util.*;
 
 public class SlidingSolver {
-    private int[][] board;
-    private TileBoard expected;
+    private final int[][] board;
+    private final TileBoard expected;
 
 
-    public SlidingSolver(int[][] initialBoard) {
+    public SlidingSolver(final int[][] initialBoard) {
         this.board = initialBoard;
-        expected = generateExpected(initialBoard.length);
+        this.expected = generateExpected(initialBoard.length);
     }
 
-    //    public SlidingSolution solvePuzzleIDAStar() {
-    public String solvePuzzleIDAStar() {
-        String res = "NO SOLUTION";
+    public SlidingSolution solvePuzzleIDAStar() {
+        String res = "";
         int row;
         int col = 0;
 
@@ -27,19 +26,17 @@ public class SlidingSolver {
             }
         }
         final Pair<Integer, Integer> zeroCoordinates = new Pair<>(row, col);
-        TileBoard tileBoard = new TileBoard(board, zeroCoordinates);
+        final TileBoard tileBoard = new TileBoard(board, zeroCoordinates);
         int bound = tileBoard.getHeuristic();
-        Set<TileBoard> visited = new HashSet<>();
-        Stack<TileBoard> stack = new Stack<>();
+        final Stack<TileBoard> stack = new Stack<>();
         stack.push(tileBoard);
-
 
         int t = Integer.MAX_VALUE;
         while (t != -1) {
-            t = subroutine(stack, visited, bound);
-            visited = new HashSet<>();
+            t = subroutine(stack, bound);
+
             if (t == -1) {
-                res = Arrays.toString(stack.toArray());
+                res = stack.pop().getMoves();
             }
 
             if (t == Integer.MAX_VALUE) {
@@ -48,30 +45,30 @@ public class SlidingSolver {
             }
 
             bound = t;
+            stack.clear();
+            stack.push(tileBoard);
         }
 
 
-        return res;
+        return new SlidingSolution(res);
     }
 
-    private int subroutine(Stack<TileBoard> fringe, Set<TileBoard> visited, int bound) {
+    private int subroutine(final Stack<TileBoard> fringe, final int bound) {
         final TileBoard tileBoard = fringe.peek();
-        int heuristic = tileBoard.getHeuristic();
+        final int heuristic = tileBoard.getHeuristic();
         if (heuristic > bound) {
             return heuristic;
         }
-
-        visited.add(tileBoard);
 
         if (expected.equals(tileBoard)) {
             return -1;
         }
 
         int min = Integer.MAX_VALUE;
-        for (TileBoard neighbor : tileBoard.getNextBoards()) {
-            if (!fringe.contains(neighbor) && !visited.contains(neighbor)) {
+        for (final TileBoard neighbor : tileBoard.getNextBoards()) {
+            if (!fringe.contains(neighbor)) {
                 fringe.add(neighbor);
-                int k = subroutine(fringe, visited, bound);
+                final int k = subroutine(fringe, bound);
                 if (k == -1)
                     return k;
 
@@ -85,8 +82,8 @@ public class SlidingSolver {
         return min;
     }
 
-    private TileBoard generateExpected(int n) {
-        int[][] expected = new int[n][n];
+    private TileBoard generateExpected(final int n) {
+        final int[][] expected = new int[n][n];
         int iter = 1;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
