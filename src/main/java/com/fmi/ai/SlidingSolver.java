@@ -5,6 +5,7 @@ import java.util.*;
 public class SlidingSolver {
     private final int[][] board;
     private final TileBoard expected;
+    private final StringBuilder sb = new StringBuilder();
 
 
     public SlidingSolver(final int[][] initialBoard) {
@@ -26,27 +27,31 @@ public class SlidingSolver {
             }
         }
         final Pair<Integer, Integer> zeroCoordinates = new Pair<>(row, col);
-        final TileBoard tileBoard = new TileBoard(board, zeroCoordinates);
+        final TileBoard tileBoard = new TileBoard(board, Util.calculateManhattanDistance(board), zeroCoordinates);
+
+
         int bound = tileBoard.getHeuristic();
-        final Stack<TileBoard> stack = new Stack<>();
-        stack.push(tileBoard);
+        TileBoard tile = tileBoard;
+//        final Stack<TileBoard> stack = new Stack<>();
+//        stack.push(tileBoard);
         // somewhat okay up to here
         int t = Integer.MAX_VALUE;
         while (t != -1) {
-            t = subroutine(stack, bound);
+
+            //t = subroutine(tile, ,bound);
 
             if (t == -1) {
-                res = stack.pop().getMoves();
+                //res = stack.pop().getMoves();
             }
 
             if (t == Integer.MAX_VALUE) {
                 System.out.println("NOT FOUND");
                 break;
             }
-
-            bound = t;
-            stack.clear();
-            stack.push(tileBoard);
+            if (t < bound)
+                bound = t;
+            //stack.clear();
+            //stack.push(tileBoard);
         }
 
 
@@ -65,19 +70,19 @@ public class SlidingSolver {
         }
 
         int min = Integer.MAX_VALUE;
-        for (final TileBoard neighbor : tileBoard.getNextBoards()) {
-            if (!fringe.contains(neighbor)) {
-                fringe.add(neighbor);
-                final int k = subroutine(fringe, bound);
-                if (k == -1)
-                    return k;
-
-                if (k < min)
-                    min = k;
-
-                fringe.pop();
-            }
-        }
+//        for (final TileBoard neighbor : tileBoard.getNextBoards()) {
+//            if (!fringe.contains(neighbor)) {
+//                fringe.add(neighbor);
+//                final int k = subroutine(fringe, bound);
+//                if (k == -1)
+//                    return k;
+//
+//                if (k < min)
+//                    min = k;
+//
+//                fringe.pop();
+//            }
+//        }
 
         return min;
     }
@@ -93,6 +98,6 @@ public class SlidingSolver {
 
         expected[n - 1][n - 1] = 0;
 
-        return new TileBoard(expected, new Pair<>(n - 1, n - 1));
+        return new TileBoard(expected, 0, new Pair<>(n - 1, n - 1));
     }
 }

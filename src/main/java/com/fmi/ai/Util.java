@@ -19,4 +19,31 @@ public class Util {
 
         return copy;
     }
+
+    /*
+     * Evaluates the given board using the Manhattan distance heuristic.
+     */
+    public static int calculateManhattanDistance(int[][] a) {
+        // TODO the black doesn't participate in the heuristic distance
+        final int n = a.length;
+        int manhattanDistance = 0;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < a[i].length; j++) {
+                manhattanDistance += Util.calcDistance(new Pair<>(i, j), getExpectedCoordinates(a[i][j], n));
+            }
+        }
+
+        return manhattanDistance;
+    }
+
+    public static Pair<Integer, Integer> getExpectedCoordinates(final int x, final int n) {
+        if (0 == x) {
+            return new Pair<>(n - 1, n - 1);
+        }
+        final int row = (0 != x % n) ? (x / n) : (x / n - 1);
+        final int col = (0 != x % n) ? (x % n - 1) : (n - 1);
+
+        return new Pair<>(row, col);
+    }
 }
